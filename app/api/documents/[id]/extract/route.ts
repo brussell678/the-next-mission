@@ -3,10 +3,10 @@ import { requireUser } from "@/lib/auth";
 import { supabaseServer } from "@/lib/supabase/server";
 import { extractTextFromPdfBuffer } from "@/lib/pdf";
 
-export async function POST(_req: Request, ctx: { params: { id: string } }) {
+export async function POST(_req: Request, ctx: { params: Promise<{ id: string }> }) {
   const { userId } = await requireUser();
-  const supabase = supabaseServer();
-  const documentId = ctx.params.id;
+  const supabase = await supabaseServer();
+  const { id: documentId } = await ctx.params;
 
   const { data: doc, error: docErr } = await supabase
     .from("documents")

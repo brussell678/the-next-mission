@@ -16,7 +16,7 @@ type JdDecoderOutput = {
 
 export async function POST(req: Request) {
   const { userId } = await requireUser();
-  const supabase = supabaseServer();
+  const supabase = await supabaseServer();
 
   const body = await req.json();
   const parsed = JdDecoderInputSchema.safeParse(body);
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
   await supabase.from("tool_runs").insert({
     ...baseRun,
     status: "success",
-    output_json: llm.data as any,
+    output_json: llm.data as Record<string, unknown>,
     tokens_in: llm.tokensIn ?? null,
     tokens_out: llm.tokensOut ?? null,
   });

@@ -1,8 +1,12 @@
-import { createBrowserClient } from "@supabase/ssr";
+import { supabaseServer } from "@/lib/supabase/server";
 
-export function supabaseBrowser() {
-  return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+export async function requireUser() {
+  const supabase = await supabaseServer();
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error || !data.user) {
+    throw new Response("Unauthorized", { status: 401 });
+  }
+
+  return { userId: data.user.id };
 }

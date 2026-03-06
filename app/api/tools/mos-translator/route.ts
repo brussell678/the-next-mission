@@ -12,7 +12,7 @@ type MosTranslatorOutput = {
 
 export async function POST(req: Request) {
   const { userId } = await requireUser();
-  const supabase = supabaseServer();
+  const supabase = await supabaseServer();
 
   const body = await req.json();
   const parsed = MosTranslatorInputSchema.safeParse(body);
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
   const baseRun = {
     user_id: userId,
     tool_name: "mos_translator" as const,
-    input_json: parsed.data as any,
+    input_json: parsed.data,
     latency_ms: latency,
   };
 
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
   await supabase.from("tool_runs").insert({
     ...baseRun,
     status: "success",
-    output_json: llm.data as any,
+    output_json: llm.data as Record<string, unknown>,
     tokens_in: llm.tokensIn ?? null,
     tokens_out: llm.tokensOut ?? null,
   });

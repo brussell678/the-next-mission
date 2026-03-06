@@ -5,7 +5,7 @@ import { ProfileUpsertSchema } from "@/lib/validators/profile";
 
 export async function GET() {
   const { userId } = await requireUser();
-  const supabase = supabaseServer();
+  const supabase = await supabaseServer();
 
   const { data, error } = await supabase
     .from("profiles")
@@ -20,7 +20,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const { userId } = await requireUser();
-  const supabase = supabaseServer();
+  const supabase = await supabaseServer();
 
   const body = await req.json();
   const parsed = ProfileUpsertSchema.safeParse(body);

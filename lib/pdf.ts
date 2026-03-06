@@ -1,6 +1,11 @@
-export async function extractTextFromPdfBuffer(_pdf: Buffer): Promise<string> {
-  // STUB: Implement with a PDF text extraction lib.
-  // In MVP, start with a library like `pdf-parse` (best-effort).
-  // If extraction fails, return empty string so API can handle gracefully.
-  return "";
+import pdfParse from "pdf-parse";
+
+export async function extractTextFromPdfBuffer(pdf: Buffer): Promise<string> {
+  try {
+    const result = await pdfParse(pdf);
+    const normalized = result.text.replace(/\r/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+    return normalized;
+  } catch {
+    return "";
+  }
 }

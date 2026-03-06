@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Next Mission (MVP)
 
-## Getting Started
+Next.js App Router application for guided military transition workflows with AI tools:
+- FITREP/EVAL -> master bullets
+- MOS translator
+- JD decoder
+- Resume targeter
 
-First, run the development server:
+## Prerequisites
+- Node.js 20+
+- A Supabase project
+- An OpenAI API key
+
+## Environment Variables
+Create `.env.local` in project root:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
+OPENAI_API_KEY=YOUR_OPENAI_API_KEY
+OPENAI_MODEL=gpt-4o-mini
+LLM_TIMEOUT_MS=30000
+# Optional:
+# OPENAI_BASE_URL=https://api.openai.com/v1
+# MAX_UPLOAD_MB=10
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Database + RLS Setup
+1. Open Supabase SQL Editor.
+2. Run: [supabase/migrations/0001_init.sql](supabase/migrations/0001_init.sql)
+3. Verify bucket `documents` exists and RLS policies are created.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Local Run
+```bash
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Health check:
+- `GET /api/health`
 
-## Learn More
+## Quality Checks
+```bash
+npm run lint
+npm run build
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Notes
+- `node_modules` is intentionally not committed to Git.
+- PDF extraction is best-effort text extraction only (no OCR in MVP).
+- Tool runs are logged without raw document text.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

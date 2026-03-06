@@ -1,5 +1,12 @@
 import { NextResponse } from "next/server";
+import { getEnv } from "@/lib/env";
 
 export async function GET() {
-  return NextResponse.json({ ok: true });
+  try {
+    getEnv();
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Invalid environment";
+    return NextResponse.json({ ok: false, error: message }, { status: 500 });
+  }
 }

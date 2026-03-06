@@ -6,7 +6,7 @@ const MAX_MB = Number(process.env.MAX_UPLOAD_MB ?? "10");
 
 export async function POST(req: Request) {
   const { userId } = await requireUser();
-  const supabase = supabaseServer();
+  const supabase = await supabaseServer();
 
   const form = await req.formData();
   const file = form.get("file");
